@@ -16,9 +16,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.maki.obd2.utils.BluetoothManager;
+import com.example.maki.obd2.utils.CustomObdCommand;
+import com.github.pires.obd.commands.ObdCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,6 +34,11 @@ import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Button btnSend;
+    private EditText editCommand;
+    private ListView commandList;
+    private final List<String> items = new ArrayList<>();
 
     private static final int REQUEST_ENABLE_BT = 1111;
     private static final String TAG = "MyActivity";
@@ -46,6 +56,27 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         InitBluetoothConnection();
+
+        commandList = (ListView) findViewById(R.id.listView);
+
+        items.add("Test");
+        final ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        commandList.setAdapter(itemsAdapter);
+        btnSend = (Button) findViewById(R.id.button);
+        editCommand = (EditText) findViewById(R.id.editText);
+
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                items.add(editCommand.getText().toString());
+                items.add(new CustomObdCommand(editCommand.getText().toString()).getResult());
+                itemsAdapter.notifyDataSetChanged();
+                //commandList.setAdapter(itemsAdapter);
+
+            }
+        });
+
+
     }
 
     private void InitBluetoothConnection()

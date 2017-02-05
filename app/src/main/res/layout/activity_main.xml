@@ -10,8 +10,31 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.maki.obd2.MainActivity">
 
-    <TextView
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:inputType="textPersonName"
+        android:text="Command"
+        android:ems="10"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/editText"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/button" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/editText"
+        android:id="@+id/listView" />
+
+    <Button
+        android:text="Send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/listView"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/button" />
+
 </RelativeLayout>
