@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startSvc()
     {
-        new updateThread(freq.getText().toString());
+        new updateThread(freq.getText().toString()).run();
     }
 
     protected class updateThread extends Thread
@@ -126,8 +126,8 @@ public class MainActivity extends AppCompatActivity {
         {
             ObdCommand rpmCommand = new RPMCommand();
             ObdCommand speedoCommand = new SpeedCommand();
-            while(isRunning)
-            {
+            //while(isRunning)
+            //{
                 try {
                     rpmCommand.run(btSocket.getInputStream(), btSocket.getOutputStream());
                 } catch (IOException e) {
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                speedoMeter.setText(rpmCommand.getResult());
+                rpmMeter.setText(rpmCommand.getCalculatedResult());
 
                 try {
                     speedoCommand.run(btSocket.getInputStream(), btSocket.getOutputStream());
@@ -144,14 +144,14 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                rpmMeter.setText(speedoCommand.getResult());
+                speedoMeter.setText(speedoCommand.getCalculatedResult());
 
                 try {
                     Thread.sleep(interval);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
+            //}
         }
     }
 
@@ -421,6 +421,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             BluetoothSocket tmpSocket =  BluetoothManager.Connect(bt);
+            if(tmpSocket!=null)
+            {
+                btSocket=tmpSocket;
+            }
             return tmpSocket==null?"REKT":"OK";
         }
 
