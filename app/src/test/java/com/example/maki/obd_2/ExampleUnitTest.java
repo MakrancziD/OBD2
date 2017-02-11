@@ -1,4 +1,4 @@
-package com.example.maki.obd2;
+package com.example.maki.obd_2;
 
 import org.junit.Test;
 

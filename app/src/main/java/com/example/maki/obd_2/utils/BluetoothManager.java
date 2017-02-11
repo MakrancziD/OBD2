@@ -1,4 +1,4 @@
-package com.example.maki.obd2.utils;
+package com.example.maki.obd_2.utils;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;

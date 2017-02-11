@@ -1,4 +1,4 @@
-package com.example.maki.obd2.dummy;
+package com.example.maki.obd_2.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;

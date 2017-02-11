@@ -1,4 +1,4 @@
-package com.example.maki.obd2;
+package com.example.maki.obd_2;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.maki.obd2.ItemFragment.OnListFragmentInteractionListener;
-import com.example.maki.obd2.dummy.DummyContent.DummyItem;
+import com.example.maki.obd_2.ItemFragment.OnListFragmentInteractionListener;
+import com.example.maki.obd_2.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 

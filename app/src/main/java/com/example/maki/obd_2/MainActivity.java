@@ -1,4 +1,4 @@
-package com.example.maki.obd2;
+package com.example.maki.obd_2;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -8,12 +8,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,17 +19,13 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.maki.obd2.utils.BluetoothManager;
-import com.example.maki.obd2.utils.CustomObdCommand;
+import com.example.maki.obd_2.utils.BluetoothManager;
+import com.example.maki.obd_2.utils.CustomObdCommand;
 import com.github.pires.obd.commands.ObdCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MyActivity";
     private BluetoothSocket btSocket;
     private BluetoothAdapter btAdapter;
+
+    private ArrayAdapter<String> itemsAdapter=null;
 
     private boolean isBluetoothOn=false;
     Context context;
@@ -60,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         commandList = (ListView) findViewById(R.id.listView);
 
         items.add("Test");
-        final ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         commandList.setAdapter(itemsAdapter);
         btnSend = (Button) findViewById(R.id.button);
         editCommand = (EditText) findViewById(R.id.editText);
@@ -69,14 +65,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 items.add(editCommand.getText().toString());
-                items.add(new CustomObdCommand(editCommand.getText().toString()).getResult());
-                itemsAdapter.notifyDataSetChanged();
-                //commandList.setAdapter(itemsAdapter);
+                final CustomObdCommand command = new CustomObdCommand(editCommand.getText().toString());
+                try {
+                    command.run(btSocket.getInputStream(), btSocket.getOutputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
+//                ((MainActivity) context).runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ((MainActivity) context).writeCommandResult(command);
+//                    }
+//                });
             }
         });
 
 
+    }
+
+    private void writeCommandResult(ObdCommand cmd)
+    {
+        items.add(cmd.getResult());
+        itemsAdapter.notifyDataSetChanged();
     }
 
     private void InitBluetoothConnection()

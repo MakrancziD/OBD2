@@ -1,4 +1,4 @@
-package com.example.maki.obd2;
+package com.example.maki.obd_2;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,10 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.maki.obd2.dummy.DummyContent;
-import com.example.maki.obd2.dummy.DummyContent.DummyItem;
-
-import java.util.List;
+import com.example.maki.obd_2.dummy.DummyContent;
+import com.example.maki.obd_2.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.
