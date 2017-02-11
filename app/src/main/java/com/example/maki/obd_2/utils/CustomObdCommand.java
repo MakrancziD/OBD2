@@ -31,4 +31,12 @@ public class CustomObdCommand extends ObdCommand {
     public String getName() {
         return null;
     }
+
+    protected void fillBuffer()
+    {
+        if(!super.cmd.startsWith("AF"))
+        {
+            super.fillBuffer();
+        }
+    }
 }
