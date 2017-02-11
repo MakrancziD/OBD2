@@ -102,32 +102,28 @@ public class MainActivity extends AppCompatActivity {
                 else
                 {
                     isRunning = true;
-                    startSvc();
+                    new updateService(Integer.parseInt(freq.getText().toString())).execute(null, null, null);
                 }
             }
         });
 
     }
 
-    private void startSvc()
-    {
-        new updateThread(freq.getText().toString()).run();
-    }
-
-    protected class updateThread extends Thread
+    private class updateService extends AsyncTask<String, String, String>
     {
         private int interval;
-        public updateThread(String interval)
-        {
-            this.interval=Integer.parseInt(interval);
+
+        public updateService(int interval) {
+            this.interval=interval;
         }
 
-        public void run()
-        {
+        @Override
+        protected String doInBackground(String... params) {
             ObdCommand rpmCommand = new RPMCommand();
             ObdCommand speedoCommand = new SpeedCommand();
-            //while(isRunning)
-            //{
+            int i=1;
+            while(isRunning)
+            {
                 try {
                     rpmCommand.run(btSocket.getInputStream(), btSocket.getOutputStream());
                 } catch (IOException e) {
@@ -135,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                rpmMeter.setText(rpmCommand.getCalculatedResult());
 
                 try {
                     speedoCommand.run(btSocket.getInputStream(), btSocket.getOutputStream());
@@ -144,14 +139,22 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                speedoMeter.setText(speedoCommand.getCalculatedResult());
+                publishProgress(rpmCommand.getCalculatedResult(),speedoCommand.getCalculatedResult());
 
                 try {
                     Thread.sleep(interval);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            //}
+            }
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            rpmMeter.setText(values[0]);
+            speedoMeter.setText(values[1]);
         }
     }
 
