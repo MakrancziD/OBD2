@@ -10,24 +10,45 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.maki.obd_2.MainActivity">
 
+    <TextView
+        android:id="@+id/rpmMeter"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:textSize="40dp"
+        android:text="RPM"
+        android:layout_alignParentLeft="true"/>
+
+    <Button
+        android:id="@+id/startBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Start"/>
+
+    <TextView
+        android:id="@+id/speedoMeter"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:textSize="40dp"
+        android:text="KM/H"
+        android:layout_alignParentRight="true"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_above="@+id/editText"
+        android:id="@+id/listView" />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text="Command"
         android:ems="10"
         android:layout_alignParentBottom="true"
         android:id="@+id/editText"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/button" />
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/editText"
-        android:id="@+id/listView" />
 
     <Button
         android:text="Send"
@@ -36,5 +57,15 @@
         android:layout_below="@+id/listView"
         android:layout_alignParentEnd="true"
         android:id="@+id/button" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_below="@+id/startBtn"
+        android:layout_centerHorizontal="true"
+        android:text="1000"
+        android:id="@+id/frequency" />
 
 </RelativeLayout>

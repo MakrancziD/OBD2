@@ -17,11 +17,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.maki.obd_2.utils.BluetoothManager;
 import com.example.maki.obd_2.utils.CustomObdCommand;
 import com.github.pires.obd.commands.ObdCommand;
+import com.github.pires.obd.commands.SpeedCommand;
+import com.github.pires.obd.commands.engine.RPMCommand;
 import com.github.pires.obd.commands.protocol.EchoOffCommand;
 import com.github.pires.obd.commands.protocol.LineFeedOffCommand;
 import com.github.pires.obd.commands.protocol.ObdRawCommand;
@@ -42,6 +45,13 @@ public class MainActivity extends AppCompatActivity {
     private ListView commandList;
     private final List<String> items = new ArrayList<>();
 
+    private Button btnStart;
+    private TextView rpmMeter;
+    private TextView speedoMeter;
+    private EditText freq;
+
+    boolean isRunning=false;
+
     private static final int REQUEST_ENABLE_BT = 1111;
     private static final String TAG = "MyActivity";
     private BluetoothSocket btSocket;
@@ -56,6 +66,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        btnStart= (Button) findViewById(R.id.startBtn);
+        rpmMeter= (TextView) findViewById(R.id.rpmMeter);
+        speedoMeter= (TextView) findViewById(R.id.speedoMeter);
+        freq= (EditText) findViewById(R.id.frequency);
 
         context = getApplicationContext();
         btAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -77,7 +92,67 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isRunning)
+                {
+                    isRunning=false;
+                }
+                else
+                {
+                    isRunning = true;
+                    startSvc();
+                }
+            }
+        });
 
+    }
+
+    private void startSvc()
+    {
+        new updateThread(freq.getText().toString());
+    }
+
+    protected class updateThread extends Thread
+    {
+        private int interval;
+        public updateThread(String interval)
+        {
+            this.interval=Integer.parseInt(interval);
+        }
+
+        public void run()
+        {
+            ObdCommand rpmCommand = new RPMCommand();
+            ObdCommand speedoCommand = new SpeedCommand();
+            while(isRunning)
+            {
+                try {
+                    rpmCommand.run(btSocket.getInputStream(), btSocket.getOutputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                speedoMeter.setText(rpmCommand.getResult());
+
+                try {
+                    speedoCommand.run(btSocket.getInputStream(), btSocket.getOutputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                rpmMeter.setText(speedoCommand.getResult());
+
+                try {
+                    Thread.sleep(interval);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     private void runCommand(ObdCommand command)
